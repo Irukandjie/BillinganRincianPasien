@@ -117,10 +117,14 @@
                             <input type="text" id="p-bill" class="form-control form-control-sm" placeholder="Nomor Bill" oninput="updateKop()">
                         </div>
                     </div>
+
                     <div class="row mb-2">
                         <div class="col-6">
-                            <label>Tanggal Periksa</label>
-                            <input type="date" id="p-tanggal" class="form-control form-control-sm" onchange="updateKop()">
+                            <label>Jenis Pasien</label>
+                            <select id="p-jenis" class="form-select form-select-sm" onchange="toggleJenisPasien()">
+                                <option value="Rawat Jalan">Rawat Jalan</option>
+                                <option value="Rawat Inap">Rawat Inap</option>
+                            </select>
                         </div>
                         <div class="col-6">
                             <label>Pembayaran</label>
@@ -131,6 +135,25 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- Tanggal untuk Rawat Jalan -->
+                    <div id="container-tgl-rj" class="mb-2">
+                        <label>Tanggal Periksa</label>
+                        <input type="date" id="p-tanggal" class="form-control form-control-sm" onchange="updateKop()">
+                    </div>
+
+                    <!-- Tanggal untuk Rawat Inap -->
+                    <div id="container-tgl-ri" class="row mb-2 d-none">
+                        <div class="col-6">
+                            <label>Tanggal Masuk</label>
+                            <input type="date" id="p-tgl-masuk" class="form-control form-control-sm" onchange="updateKop()">
+                        </div>
+                        <div class="col-6">
+                            <label>Tanggal Keluar</label>
+                            <input type="date" id="p-tgl-keluar" class="form-control form-control-sm" onchange="updateKop()">
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -222,7 +245,10 @@
                     <tr><td>ALAMAT</td><td>:</td><td id="view-alamat">-</td></tr>
                     <tr><td>NOMOR MR</td><td>:</td><td id="view-mr">-</td></tr>
                     <tr><td>NOMOR BILL</td><td>:</td><td id="view-bill">-</td></tr>
-                    <tr><td>TANGGAL PERIKSA</td><td>:</td><td id="view-tanggal">-</td></tr>
+                    <tr><td>JENIS PASIEN</td><td>:</td><td id="view-jenis">-</td></tr>
+                    <tr id="row-tgl-rj"><td>TANGGAL PERIKSA</td><td>:</td><td id="view-tanggal">-</td></tr>
+                    <tr id="row-tgl-masuk" style="display:none;"><td>TANGGAL MASUK</td><td>:</td><td id="view-tgl-masuk">-</td></tr>
+                    <tr id="row-tgl-keluar" style="display:none;"><td>TANGGAL KELUAR</td><td>:</td><td id="view-tgl-keluar">-</td></tr>
                     <tr><td>PEMBAYARAN</td><td>:</td><td id="view-bayar">-</td></tr>
                 </table>
 
@@ -264,6 +290,37 @@
     window.onload = function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('p-tanggal').value = today;
+        document.getElementById('p-tgl-masuk').value = today;
+        document.getElementById('p-tgl-keluar').value = today;
+        
+        toggleJenisPasien();
+    }
+
+    // Mengganti tampilan form dan cetakan sesuai jenis pasien
+    function toggleJenisPasien() {
+        const jenis = document.getElementById('p-jenis').value;
+        const containerRJ = document.getElementById('container-tgl-rj');
+        const containerRI = document.getElementById('container-tgl-ri');
+        
+        const rowRJ = document.getElementById('row-tgl-rj');
+        const rowMasuk = document.getElementById('row-tgl-masuk');
+        const rowKeluar = document.getElementById('row-tgl-keluar');
+
+        if (jenis === "Rawat Inap") {
+            containerRJ.classList.add('d-none');
+            containerRI.classList.remove('d-none');
+            
+            rowRJ.style.display = 'none';
+            rowMasuk.style.display = 'table-row';
+            rowKeluar.style.display = 'table-row';
+        } else {
+            containerRJ.classList.remove('d-none');
+            containerRI.classList.add('d-none');
+            
+            rowRJ.style.display = 'table-row';
+            rowMasuk.style.display = 'none';
+            rowKeluar.style.display = 'none';
+        }
         updateKop();
     }
 
@@ -295,6 +352,16 @@
         return parseFloat(angka).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
 
+    // Helper function format tanggal ke DD-MM-YYYY
+    function formatTanggal(tglInput) {
+        if (!tglInput) return '-';
+        const tgl = new Date(tglInput);
+        const d = String(tgl.getDate()).padStart(2, '0');
+        const m = String(tgl.getMonth() + 1).padStart(2, '0');
+        const y = tgl.getFullYear();
+        return `${d}-${m}-${y}`;
+    }
+
     function bulatkanFarmasi(harga) {
         let sisa = harga % 1000;
         let base = Math.floor(harga / 1000) * 1000; 
@@ -313,18 +380,12 @@
         document.getElementById('view-mr').innerText = document.getElementById('p-mr').value || '-';
         document.getElementById('view-bill').innerText = document.getElementById('p-bill').value || '-';
         document.getElementById('view-bayar').innerText = document.getElementById('p-bayar').value || '-';
+        document.getElementById('view-jenis').innerText = document.getElementById('p-jenis').value || '-';
         
         // Memproses Tanggal
-        const tglInput = document.getElementById('p-tanggal').value;
-        if (tglInput) {
-            const tgl = new Date(tglInput);
-            const d = String(tgl.getDate()).padStart(2, '0');
-            const m = String(tgl.getMonth() + 1).padStart(2, '0');
-            const y = tgl.getFullYear();
-            document.getElementById('view-tanggal').innerText = `${d}-${m}-${y}`;
-        } else {
-            document.getElementById('view-tanggal').innerText = '-';
-        }
+        document.getElementById('view-tanggal').innerText = formatTanggal(document.getElementById('p-tanggal').value);
+        document.getElementById('view-tgl-masuk').innerText = formatTanggal(document.getElementById('p-tgl-masuk').value);
+        document.getElementById('view-tgl-keluar').innerText = formatTanggal(document.getElementById('p-tgl-keluar').value);
     }
 
     function simpanItem() {
