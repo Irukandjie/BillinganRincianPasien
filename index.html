@@ -1,123 +1,128 @@
-    <!DOCTYPE html>
-    <html lang="id">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Sistem Kasir - Rincian Transaksi</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <style>
-            /* --- STYLE UNTUK TAMPILAN WEB --- */
-            body { background-color: #f4f6f9; }
-            .print-preview {
-                background: white;
-                padding: 40px;
-                min-height: 297mm;
-                box-shadow: 0 0 10px rgba(0,0,0,0.1);
-                position: relative;
-                overflow: hidden;
-            }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Kasir - Rincian Transaksi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- STYLE UNTUK TAMPILAN WEB --- */
+        body { background-color: #f4f6f9; }
+        .print-preview {
+            background: white;
+            padding: 40px;
+            min-height: 297mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
 
-            /* --- WATERMARK / BACKGROUND LOGO --- */
+        /* --- WATERMARK / BACKGROUND LOGO --- */
+        .watermark {
+            position: absolute;
+            top: 55%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.10; 
+            width: 70%; 
+            pointer-events: none;
+            z-index: 0;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* --- STYLE KHUSUS SAAT DICETAK (PRINT / PDF) --- */
+        @media print {
+            body { background-color: white; }
+            .no-print { display: none !important; }
+            .print-preview {
+                padding: 0;
+                box-shadow: none;
+                min-height: auto;
+            }
+            @page { margin: 10mm; } 
+            
             .watermark {
-                position: absolute;
-                top: 55%; 
-                left: 50%;
-                transform: translate(-50%, -50%);
-                opacity: 0.10; 
-                width: 70%; 
-                pointer-events: none;
-                z-index: 0;
+                opacity: 0.10 !important; 
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-
-            /* --- STYLE KHUSUS SAAT DICETAK (PRINT / PDF) --- */
-            @media print {
-                body { background-color: white; }
-                .no-print { display: none !important; }
-                .print-preview {
-                    padding: 0;
-                    box-shadow: none;
-                    min-height: auto;
-                }
-                @page { margin: 10mm; } 
-                
-                .watermark {
-                    opacity: 0.10 !important; 
-                    -webkit-print-color-adjust: exact !important;
-                    print-color-adjust: exact !important;
-                }
-                
-                img.header-paripurna {
-                    -webkit-print-color-adjust: exact !important;
-                    print-color-adjust: exact !important;
-                }
-                
-                .hide-on-print {
-                    display: none !important;
-                }
-            }
-
-            /* Tipografi Nota & Layout */
-            .nota-header-img-container {
-                margin-bottom: 25px;
-                position: relative;
-                z-index: 1;
-            }
-            .header-paripurna {
-                width: 100%;
-                height: auto;
-                display: block;
-            }
-
-            .nota-title { text-align: center; font-weight: bold; font-size: 22px; margin-bottom: 30px; letter-spacing: 1px; position: relative; z-index: 1; }
-            .table-nota { position: relative; z-index: 1; width: 100%; }
-            .table-nota th, .table-nota td { padding: 4px 8px; border: none; }
-            .divisi-title { font-weight: bold; font-size: 14px; text-transform: uppercase; margin-top: 15px; border-bottom: 1px solid #000; padding-bottom: 3px; position: relative; z-index: 1;}
-            .item-row td { font-size: 14px; }
-            .total-row { font-weight: bold; font-size: 15px; }
             
-            .header-kolom {
-                font-size: 13px;
-                font-weight: bold;
-                border-top: 2px solid #333;
-                border-bottom: 2px solid #333;
-                margin-top: 20px;
-                margin-bottom: 10px;
+            img.header-paripurna {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
-        </style>
-    </head>
-    <body>
-
-    <div class="container-fluid py-4">
-        <div class="row">
             
-            <div class="col-lg-4 no-print mb-4">
-                <div class="card shadow-sm mb-3">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-user-edit"></i> Data Pasien</h5>
+            .hide-on-print {
+                display: none !important;
+            }
+        }
+
+        /* Tipografi Nota & Layout */
+        .nota-header-img-container {
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        .header-paripurna {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .nota-title { text-align: center; font-weight: bold; font-size: 22px; margin-bottom: 30px; letter-spacing: 1px; position: relative; z-index: 1; }
+        .table-nota { position: relative; z-index: 1; width: 100%; }
+        .table-nota th, .table-nota td { padding: 4px 8px; border: none; }
+        .divisi-title { font-weight: bold; font-size: 14px; text-transform: uppercase; margin-top: 15px; border-bottom: 1px solid #000; padding-bottom: 3px; position: relative; z-index: 1;}
+        .item-row td { font-size: 14px; }
+        .total-row { font-weight: bold; font-size: 15px; }
+        
+        .header-kolom {
+            font-size: 13px;
+            font-weight: bold;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        
+        <div class="col-lg-4 no-print mb-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-user-edit"></i> Data Pasien</h5>
+                </div>
+                <div class="card-body form-sm">
+                    <div class="mb-2">
+                        <label>Nama Pasien</label>
+                        <input type="text" id="p-nama" class="form-control form-control-sm" placeholder="Nama Pasien..." oninput="updateKop()">
                     </div>
-                    <div class="card-body form-sm">
-                        <div class="mb-2">
-                            <label>Nama Pasien</label>
-                            <input type="text" id="p-nama" class="form-control form-control-sm" placeholder="Nama Pasien..." oninput="updateKop()">
+                    <div class="mb-2">
+                        <label>Alamat</label>
+                        <input type="text" id="p-alamat" class="form-control form-control-sm" placeholder="Alamat Lengkap..." oninput="updateKop()">
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <label>Nomor MR</label>
+                            <input type="text" id="p-mr" class="form-control form-control-sm" placeholder="Nomor Medical Record" oninput="updateKop()">
                         </div>
-                        <div class="mb-2">
-                            <label>Alamat</label>
-                            <input type="text" id="p-alamat" class="form-control form-control-sm" placeholder="Alamat Lengkap..." oninput="updateKop()">
+                        <div class="col-6">
+                            <label>Nomor Bill</label>
+                            <input type="text" id="p-bill" class="form-control form-control-sm" placeholder="Nomor Bill" oninput="updateKop()">
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-6">
-                                <label>Nomor MR</label>
-                                <input type="text" id="p-mr" class="form-control form-control-sm" placeholder="Nomor Medical Record" oninput="updateKop()">
-                            </div>
-                            <div class="col-6">
-                                <label>Nomor Bill</label>
-                                <input type="text" id="p-bill" class="form-control form-control-sm" placeholder="Nomor Bill" oninput="updateKop()">
-                            </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <label>Tanggal Periksa</label>
+                            <input type="date" id="p-tanggal" class="form-control form-control-sm" onchange="updateKop()">
                         </div>
-                        <div class="mb-2">
+                        <div class="col-6">
                             <label>Pembayaran</label>
                             <select id="p-bayar" class="form-select form-select-sm" onchange="updateKop()">
                                 <option value="Umum/Cash">Umum/Cash</option>
@@ -127,344 +132,359 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="card shadow-sm">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0" id="form-title"><i class="fas fa-cart-plus"></i> Tambah Tindakan/Obat</h5>
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0" id="form-title"><i class="fas fa-cart-plus"></i> Tambah Tindakan/Obat</h5>
+                </div>
+                <div class="card-body form-sm">
+                    <input type="hidden" id="edit-id">
+                    
+                    <div class="mb-2">
+                        <label>Jenis Pelayanan</label>
+                        <select id="i-divisi" class="form-select form-select-sm" onchange="toggleSatuan()">
+                            <option value="ADMINISTRASI RAWAT JALAN">Administrasi Rawat Jalan</option>
+                            <option value="ADMINISTRASI RAWAT INAP">Administrasi Rawat Inap</option>
+                            <option value="ADMINISTRASI BEDAH">Administrasi Bedah</option>
+                            <option value="RAWAT JALAN">Rawat Jalan</option>
+                            <option value="RAWAT INAP">Rawat Inap</option>
+                            <option value="INSTALASI FARMASI">Instalasi Farmasi</option>
+                            <option value="KONSULTASI DOKTER">Konsultasi Dokter (RJ)</option>
+                            <option value="ALAT RJ">Sewa Alat RJ</option>
+                            <option value="ALAT RAWAT INAP">Sewa Alat Rawat Inap</option>
+                            <option value="BIAYA KAMAR">Biaya Kamar</option>
+                            <option value="KONSULTASI DOKTER RANAP">Konsultasi Dokter Ranap</option>
+                            <option value="KAMAR BEDAH">Kamar Bedah</option>
+                            <option value="LABORATORIUM">Laboratorium</option>
+                            <option value="RADIOLOGI">Radiologi</option>
+                            <option value="VK">VK (Kamar Bersalin)</option>
+                            <option value="PERISTI">Peristi</option>
+                            <option value="UGD">UGD</option>
+                        </select>
                     </div>
-                    <div class="card-body form-sm">
-                        <input type="hidden" id="edit-id">
+                    
+                    <div class="mb-2">
+                        <label>Nama Item / Keterangan</label>
+                        <input type="text" id="i-nama" class="form-control form-control-sm" placeholder="nama obat, tindakan, atau layanan">
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-4" id="container-qty">
+                            <label>Qty</label>
+                            <input type="number" id="i-qty" class="form-control form-control-sm" value="1" min="1">
+                        </div>
                         
-                        <div class="mb-2">
-                            <label>Jenis Pelayanan</label>
-                            <select id="i-divisi" class="form-select form-select-sm" onchange="toggleSatuan()">
-                                <option value="ADMINISTRASI RAWAT JALAN">Administrasi Rawat Jalan</option>
-                                <option value="ADMINISTRASI RAWAT INAP">Administrasi Rawat Inap</option>
-                                <option value="ADMINISTRASI BEDAH">Administrasi Bedah</option>
-                                <option value="RAWAT JALAN">Rawat Jalan</option>
-                                <option value="RAWAT INAP">Rawat Inap</option>
-                                <option value="INSTALASI FARMASI">Instalasi Farmasi</option>
-                                <option value="KONSULTASI DOKTER">Konsultasi Dokter (RJ)</option>
-                                <option value="ALAT RJ">Sewa Alat RJ</option>
-                                <option value="ALAT RAWAT INAP">Sewa Alat Rawat Inap</option>
-                                <option value="BIAYA KAMAR">Biaya Kamar</option>
-                                <option value="KONSULTASI DOKTER RANAP">Konsultasi Dokter Ranap</option>
-                                <option value="KAMAR BEDAH">Kamar Bedah</option>
-                                <option value="LABORATORIUM">Laboratorium</option>
-                                <option value="RADIOLOGI">Radiologi</option>
-                                <option value="VK">VK (Kamar Bersalin)</option>
-                                <option value="PERISTI">Peristi</option>
-                                <option value="UGD">UGD</option>
+                        <div class="col-8" id="container-satuan">
+                            <label>Satuan</label>
+                            <select id="i-satuan" class="form-select form-select-sm">
+                                <option value="X" class="d-none">X</option> 
+                                <option value="Kapsul">Kapsul</option>
+                                <option value="Tablet">Tablet</option>
+                                <option value="Via">Via</option>
+                                <option value="Sirup/Fls">Sirup/Fls</option>
+                                <option value="Ampul">Ampul</option>
+                                <option value="Suppo">Suppo</option>
+                                <option value="Ovula">Ovula</option>
+                                <option value="Unit">Unit</option>
+                                <option value="Box">Box</option>
+                                <option value="ML">ML</option>
+                                <option value="Pcs">Pcs</option>
+                                <option value="Bungkus">Bungkus</option>
                             </select>
                         </div>
-                        
-                        <div class="mb-2">
-                            <label>Nama Item / Keterangan</label>
-                            <input type="text" id="i-nama" class="form-control form-control-sm" placeholder="nama obat, tindakan, atau layanan">
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-4" id="container-qty">
-                                <label>Qty</label>
-                                <input type="number" id="i-qty" class="form-control form-control-sm" value="1" min="1">
-                            </div>
-                            
-                            <div class="col-8" id="container-satuan">
-                                <label>Satuan</label>
-                                <select id="i-satuan" class="form-select form-select-sm">
-                                    <option value="X" class="d-none">X</option> 
-                                    <option value="Kapsul">Kapsul</option>
-                                    <option value="Tablet">Tablet</option>
-                                    <option value="Via">Via</option>
-                                    <option value="Sirup/Fls">Sirup/Fls</option>
-                                    <option value="Ampul">Ampul</option>
-                                    <option value="Suppo">Suppo</option>
-                                    <option value="Ovula">Ovula</option>
-                                    <option value="Unit">Unit</option>
-                                    <option value="Box">Box</option>
-                                    <option value="ML">ML</option>
-                                    <option value="Pcs">Pcs</option>
-                                    <option value="Bungkus">Bungkus</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label id="label-harga">Harga Satuan (Rp)</label>
-                            <input type="number" id="i-harga" class="form-control form-control-sm" placeholder="Nominal dalam Rupiah" min="0">
-                        </div>
-
-                        <button class="btn btn-success w-100 btn-sm" onclick="simpanItem()" id="btn-simpan">Tambah ke Rincian</button>
-                        <button class="btn btn-secondary w-100 btn-sm mt-2 d-none" onclick="batalEdit()" id="btn-batal">Batal Edit</button>
                     </div>
-                </div>
-                
-                <button class="btn btn-primary w-100 mt-3 shadow" onclick="window.print()"><i class="fas fa-print"></i> CETAK TRANSAKSI (PRINT / PDF)</button>
-            </div>
-
-            <div class="col-lg-8">
-                <div class="print-preview">
-                    
-                    <img src="https://i.ibb.co.com/0jJYrbpj/LOGO-KOTAK-PNG.png" class="watermark" alt="Logo Watermark Sekar Laras">
-                    
-                    <div class="nota-header-img-container">
-                        <img src="https://i.ibb.co.com/why9WrWj/Header-paripurna.png" alt="Header RS Sekar Laras Paripurna" class="header-paripurna">
+                    <div class="mb-3">
+                        <label id="label-harga">Harga Satuan (Rp)</label>
+                        <input type="number" id="i-harga" class="form-control form-control-sm" placeholder="Nominal dalam Rupiah" min="0">
                     </div>
 
-                    <div class="nota-title">RINCIAN TRANSAKSI</div>
-
-                    <table class="table-nota mb-2" style="font-size: 14px; width: 60%;">
-                        <tr><td width="130">NAMA PASIEN</td><td width="10">:</td><td id="view-nama">-</td></tr>
-                        <tr><td>ALAMAT</td><td>:</td><td id="view-alamat">-</td></tr>
-                        <tr><td>NOMOR MR</td><td>:</td><td id="view-mr">-</td></tr>
-                        <tr><td>NOMOR BILL</td><td>:</td><td id="view-bill">-</td></tr>
-                        <tr><td>PEMBAYARAN</td><td>:</td><td id="view-bayar">-</td></tr>
-                    </table>
-
-                    <table class="table-nota header-kolom w-100">
-                        <tr>
-                            <td width="40%" class="ps-4">NAMA PRODUK</td>
-                            <td width="10%" class="text-end">QTY</td>
-                            <td width="15%">SATUAN</td>
-                            <td width="15%" class="text-end">HARGA SATUAN</td>
-                            <td width="5%"></td>
-                            <td width="15%" class="text-end">HARGA TOTAL</td>
-                            <td width="10%" class="no-print"></td>
-                        </tr>
-                    </table>
-
-                    <div id="rincian-container"></div>
-
-                    <table class="table-nota mt-4" style="width: 100%; border-top: 2px solid #333;">
-                        <tr>
-                            <td width="40%"></td>
-                            <td width="25%"></td>
-                            <td width="15%" class="text-end total-row">TOTAL BIAYA</td>
-                            <td width="5%" class="total-row">Rp</td>
-                            <td width="15%" class="text-end total-row" id="view-grandtotal">0</td>
-                            <td width="10%" class="no-print"></td>
-                        </tr>
-                    </table>
+                    <button class="btn btn-success w-100 btn-sm" onclick="simpanItem()" id="btn-simpan">Tambah ke Rincian</button>
+                    <button class="btn btn-secondary w-100 btn-sm mt-2 d-none" onclick="batalEdit()" id="btn-batal">Batal Edit</button>
                 </div>
             </div>
-
+            
+            <button class="btn btn-primary w-100 mt-3 shadow" onclick="window.print()"><i class="fas fa-print"></i> CETAK TRANSAKSI (PRINT / PDF)</button>
         </div>
-    </div>
 
-    <script>
-        let items = [];
-        let itemIdCounter = 1;
-
-        function toggleSatuan() {
-            const divisi = document.getElementById('i-divisi').value;
-            const containerSatuan = document.getElementById('container-satuan');
-            const containerQty = document.getElementById('container-qty');
-            const inputSatuan = document.getElementById('i-satuan');
-            const labelHarga = document.getElementById('label-harga');
-
-            if (divisi === "INSTALASI FARMASI") {
-                containerSatuan.classList.remove('d-none');
-                containerQty.classList.remove('col-12');
-                containerQty.classList.add('col-4');
-                labelHarga.innerText = "Harga Total Obat (Rp)";
-                // Jika valuenya "X", ubah ke default "Kapsul" saat masuk ke opsi Farmasi
-                if(inputSatuan.value === "X") inputSatuan.value = "Kapsul";
-            } else {
-                containerSatuan.classList.add('d-none');
-                containerQty.classList.remove('col-4');
-                containerQty.classList.add('col-12');
-                labelHarga.innerText = "Harga Satuan (Rp)";
-                // Paksa value menjadi "X"
-                inputSatuan.value = "X"; 
-            }
-        }
-
-        toggleSatuan();
-
-        function formatUang(angka) {
-            return parseFloat(angka).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-        }
-
-        function bulatkanFarmasi(harga) {
-            let sisa = harga % 1000;
-            let base = Math.floor(harga / 1000) * 1000; 
-            
-            if (sisa > 0 && sisa <= 500) {
-                return base + 500;
-            } else if (sisa > 500) {
-                return base + 1000;
-            }
-            return harga; 
-        }
-
-        function updateKop() {
-            document.getElementById('view-nama').innerText = document.getElementById('p-nama').value || '-';
-            document.getElementById('view-alamat').innerText = document.getElementById('p-alamat').value || '-';
-            document.getElementById('view-mr').innerText = document.getElementById('p-mr').value || '-';
-            document.getElementById('view-bill').innerText = document.getElementById('p-bill').value || '-';
-            document.getElementById('view-bayar').innerText = document.getElementById('p-bayar').value || '-';
-        }
-
-        function simpanItem() {
-            const divisi = document.getElementById('i-divisi').value;
-            const nama = document.getElementById('i-nama').value;
-            const qty = parseInt(document.getElementById('i-qty').value) || 0;
-            const satuan = document.getElementById('i-satuan').value;
-            const hargaInput = parseFloat(document.getElementById('i-harga').value) || 0;
-            
-            const editId = document.getElementById('edit-id').value;
-
-            if(!nama || hargaInput === 0) {
-                alert("Nama Item dan Harga harus diisi!");
-                return;
-            }
-
-            let totalAkhir = 0;
-            
-            if (divisi === "INSTALASI FARMASI") {
-                // Untuk farmasi, harga yang diketik sudah Harga Total, langsung dibulatkan
-                totalAkhir = bulatkanFarmasi(hargaInput);
-            } else {
-                // Untuk divisi lain, inputnya adalah Harga Satuan, jadi dikali Qty
-                totalAkhir = qty * hargaInput;
-            }
-
-            if(editId) {
-                const index = items.findIndex(i => i.id == editId);
-                if(index !== -1) {
-                    items[index] = { 
-                        id: editId, 
-                        divisi, 
-                        nama, 
-                        qty, 
-                        satuan, 
-                        harga: hargaInput, 
-                        totalAkhir
-                    };
-                }
-                batalEdit();
+        <div class="col-lg-8">
+            <div class="print-preview">
                 
-            } else {
-                let newId = itemIdCounter++;
-                items.push({ 
-                    id: newId, 
+                <img src="https://i.ibb.co.com/0jJYrbpj/LOGO-KOTAK-PNG.png" class="watermark" alt="Logo Watermark Sekar Laras">
+                
+                <div class="nota-header-img-container">
+                    <img src="https://i.ibb.co.com/why9WrWj/Header-paripurna.png" alt="Header RS Sekar Laras Paripurna" class="header-paripurna">
+                </div>
+
+                <div class="nota-title">RINCIAN TRANSAKSI</div>
+
+                <table class="table-nota mb-2" style="font-size: 14px; width: 60%;">
+                    <tr><td width="130">NAMA PASIEN</td><td width="10">:</td><td id="view-nama">-</td></tr>
+                    <tr><td>ALAMAT</td><td>:</td><td id="view-alamat">-</td></tr>
+                    <tr><td>NOMOR MR</td><td>:</td><td id="view-mr">-</td></tr>
+                    <tr><td>NOMOR BILL</td><td>:</td><td id="view-bill">-</td></tr>
+                    <tr><td>TANGGAL PERIKSA</td><td>:</td><td id="view-tanggal">-</td></tr>
+                    <tr><td>PEMBAYARAN</td><td>:</td><td id="view-bayar">-</td></tr>
+                </table>
+
+                <table class="table-nota header-kolom w-100">
+                    <tr>
+                        <td width="40%" class="ps-4">NAMA PRODUK</td>
+                        <td width="10%" class="text-end">QTY</td>
+                        <td width="15%">SATUAN</td>
+                        <td width="15%" class="text-end">HARGA SATUAN</td>
+                        <td width="5%"></td>
+                        <td width="15%" class="text-end">HARGA TOTAL</td>
+                        <td width="10%" class="no-print"></td>
+                    </tr>
+                </table>
+
+                <div id="rincian-container"></div>
+
+                <table class="table-nota mt-4" style="width: 100%; border-top: 2px solid #333;">
+                    <tr>
+                        <td width="40%"></td>
+                        <td width="25%"></td>
+                        <td width="15%" class="text-end total-row">TOTAL BIAYA</td>
+                        <td width="5%" class="total-row">Rp</td>
+                        <td width="15%" class="text-end total-row" id="view-grandtotal">0</td>
+                        <td width="10%" class="no-print"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let items = [];
+    let itemIdCounter = 1;
+
+    // Set tanggal hari ini saat halaman dimuat
+    window.onload = function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('p-tanggal').value = today;
+        updateKop();
+    }
+
+    function toggleSatuan() {
+        const divisi = document.getElementById('i-divisi').value;
+        const containerSatuan = document.getElementById('container-satuan');
+        const containerQty = document.getElementById('container-qty');
+        const inputSatuan = document.getElementById('i-satuan');
+        const labelHarga = document.getElementById('label-harga');
+
+        if (divisi === "INSTALASI FARMASI") {
+            containerSatuan.classList.remove('d-none');
+            containerQty.classList.remove('col-12');
+            containerQty.classList.add('col-4');
+            labelHarga.innerText = "Harga Total Obat (Rp)";
+            if(inputSatuan.value === "X") inputSatuan.value = "Kapsul";
+        } else {
+            containerSatuan.classList.add('d-none');
+            containerQty.classList.remove('col-4');
+            containerQty.classList.add('col-12');
+            labelHarga.innerText = "Harga Satuan (Rp)";
+            inputSatuan.value = "X"; 
+        }
+    }
+
+    toggleSatuan();
+
+    function formatUang(angka) {
+        return parseFloat(angka).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    function bulatkanFarmasi(harga) {
+        let sisa = harga % 1000;
+        let base = Math.floor(harga / 1000) * 1000; 
+        
+        if (sisa > 0 && sisa <= 500) {
+            return base + 500;
+        } else if (sisa > 500) {
+            return base + 1000;
+        }
+        return harga; 
+    }
+
+    function updateKop() {
+        document.getElementById('view-nama').innerText = document.getElementById('p-nama').value || '-';
+        document.getElementById('view-alamat').innerText = document.getElementById('p-alamat').value || '-';
+        document.getElementById('view-mr').innerText = document.getElementById('p-mr').value || '-';
+        document.getElementById('view-bill').innerText = document.getElementById('p-bill').value || '-';
+        document.getElementById('view-bayar').innerText = document.getElementById('p-bayar').value || '-';
+        
+        // Memproses Tanggal
+        const tglInput = document.getElementById('p-tanggal').value;
+        if (tglInput) {
+            const tgl = new Date(tglInput);
+            const d = String(tgl.getDate()).padStart(2, '0');
+            const m = String(tgl.getMonth() + 1).padStart(2, '0');
+            const y = tgl.getFullYear();
+            document.getElementById('view-tanggal').innerText = `${d}-${m}-${y}`;
+        } else {
+            document.getElementById('view-tanggal').innerText = '-';
+        }
+    }
+
+    function simpanItem() {
+        const divisi = document.getElementById('i-divisi').value;
+        const nama = document.getElementById('i-nama').value;
+        const qty = parseInt(document.getElementById('i-qty').value) || 0;
+        const satuan = document.getElementById('i-satuan').value;
+        const hargaInput = parseFloat(document.getElementById('i-harga').value) || 0;
+        
+        const editId = document.getElementById('edit-id').value;
+
+        if(!nama || hargaInput === 0) {
+            alert("Nama Item dan Harga harus diisi!");
+            return;
+        }
+
+        let totalAkhir = 0;
+        
+        if (divisi === "INSTALASI FARMASI") {
+            totalAkhir = bulatkanFarmasi(hargaInput);
+        } else {
+            totalAkhir = qty * hargaInput;
+        }
+
+        if(editId) {
+            const index = items.findIndex(i => i.id == editId);
+            if(index !== -1) {
+                items[index] = { 
+                    id: editId, 
                     divisi, 
                     nama, 
                     qty, 
                     satuan, 
                     harga: hargaInput, 
-                    totalAkhir 
-                });
+                    totalAkhir
+                };
             }
-
-            document.getElementById('i-nama').value = '';
-            document.getElementById('i-qty').value = '1';
-            document.getElementById('i-harga').value = '';
+            batalEdit();
             
-            toggleSatuan(); 
+        } else {
+            let newId = itemIdCounter++;
+            items.push({ 
+                id: newId, 
+                divisi, 
+                nama, 
+                qty, 
+                satuan, 
+                harga: hargaInput, 
+                totalAkhir 
+            });
+        }
+
+        document.getElementById('i-nama').value = '';
+        document.getElementById('i-qty').value = '1';
+        document.getElementById('i-harga').value = '';
+        
+        toggleSatuan(); 
+        renderTabel();
+    }
+
+    function editItem(id) {
+        const item = items.find(i => i.id == id);
+        if(!item) return;
+
+        document.getElementById('edit-id').value = item.id;
+        document.getElementById('i-divisi').value = item.divisi;
+        
+        toggleSatuan(); 
+
+        document.getElementById('i-nama').value = item.nama;
+        document.getElementById('i-qty').value = item.qty;
+        document.getElementById('i-satuan').value = item.satuan;
+        document.getElementById('i-harga').value = item.harga;
+
+        document.getElementById('form-title').innerHTML = '<i class="fas fa-edit"></i> Edit Tindakan/Obat';
+        document.getElementById('btn-simpan').innerText = 'Simpan Perubahan';
+        document.getElementById('btn-simpan').classList.replace('btn-success', 'btn-warning');
+        document.getElementById('btn-batal').classList.remove('d-none');
+    }
+
+    function batalEdit() {
+        document.getElementById('edit-id').value = '';
+        document.getElementById('i-nama').value = '';
+        document.getElementById('i-qty').value = '1';
+        document.getElementById('i-harga').value = '';
+        
+        document.getElementById('i-divisi').value = "ADMINISTRASI RAWAT JALAN";
+        toggleSatuan(); 
+
+        document.getElementById('form-title').innerHTML = '<i class="fas fa-cart-plus"></i> Tambah Tindakan/Obat';
+        document.getElementById('btn-simpan').innerText = 'Tambah ke Rincian';
+        document.getElementById('btn-simpan').classList.replace('btn-warning', 'btn-success');
+        document.getElementById('btn-batal').classList.add('d-none');
+    }
+
+    function hapusItem(id) {
+        if(confirm("Apakah Anda yakin ingin menghapus rincian ini?")) {
+            items = items.filter(i => i.id != id);
             renderTabel();
         }
+    }
 
-        function editItem(id) {
-            const item = items.find(i => i.id == id);
-            if(!item) return;
+    function renderTabel() {
+        const container = document.getElementById('rincian-container');
+        container.innerHTML = '';
 
-            document.getElementById('edit-id').value = item.id;
-            document.getElementById('i-divisi').value = item.divisi;
+        const groupedItems = items.reduce((acc, item) => {
+            if (!acc[item.divisi]) acc[item.divisi] = [];
+            acc[item.divisi].push(item);
+            return acc;
+        }, {});
+
+        let grandTotal = 0;
+
+        for (const [divisi, list] of Object.entries(groupedItems)) {
+            let html = `<div class="divisi-title">${divisi}</div>`;
+            html += `<table class="table-nota w-100 item-row"><tbody>`;
             
-            toggleSatuan(); 
+            let subTotalDivisi = 0;
 
-            document.getElementById('i-nama').value = item.nama;
-            document.getElementById('i-qty').value = item.qty;
-            document.getElementById('i-satuan').value = item.satuan;
-            document.getElementById('i-harga').value = item.harga;
-
-            document.getElementById('form-title').innerHTML = '<i class="fas fa-edit"></i> Edit Tindakan/Obat';
-            document.getElementById('btn-simpan').innerText = 'Simpan Perubahan';
-            document.getElementById('btn-simpan').classList.replace('btn-success', 'btn-warning');
-            document.getElementById('btn-batal').classList.remove('d-none');
-        }
-
-        function batalEdit() {
-            document.getElementById('edit-id').value = '';
-            document.getElementById('i-nama').value = '';
-            document.getElementById('i-qty').value = '1';
-            document.getElementById('i-harga').value = '';
-            
-            // Reset dropdown ke default
-            document.getElementById('i-divisi').value = "ADMINISTRASI RAWAT JALAN";
-            toggleSatuan(); 
-
-            document.getElementById('form-title').innerHTML = '<i class="fas fa-cart-plus"></i> Tambah Tindakan/Obat';
-            document.getElementById('btn-simpan').innerText = 'Tambah ke Rincian';
-            document.getElementById('btn-simpan').classList.replace('btn-warning', 'btn-success');
-            document.getElementById('btn-batal').classList.add('d-none');
-        }
-
-        function hapusItem(id) {
-            if(confirm("Apakah Anda yakin ingin menghapus rincian ini?")) {
-                items = items.filter(i => i.id != id);
-                renderTabel();
-            }
-        }
-
-        function renderTabel() {
-            const container = document.getElementById('rincian-container');
-            container.innerHTML = '';
-
-            const groupedItems = items.reduce((acc, item) => {
-                if (!acc[item.divisi]) acc[item.divisi] = [];
-                acc[item.divisi].push(item);
-                return acc;
-            }, {});
-
-            let grandTotal = 0;
-
-            for (const [divisi, list] of Object.entries(groupedItems)) {
-                let html = `<div class="divisi-title">${divisi}</div>`;
-                html += `<table class="table-nota w-100 item-row"><tbody>`;
+            list.forEach(item => {
+                subTotalDivisi += item.totalAkhir;
+                grandTotal += item.totalAkhir;
                 
-                let subTotalDivisi = 0;
+                let tampilHargaSatuan = (divisi === "INSTALASI FARMASI") ? "-" : formatUang(item.harga);
+                
+                html += `
+                    <tr>
+                        <td width="40%" class="ps-4">${item.nama}</td>
+                        <td width="10%" class="text-end">${item.qty}</td>
+                        <td width="15%">${item.satuan}</td>
+                        <td width="15%" class="text-end">${tampilHargaSatuan}</td>
+                        <td width="5%">Rp</td>
+                        <td width="15%" class="text-end">${formatUang(item.totalAkhir)}</td>
+                        <td width="10%" class="text-end no-print">
+                            <button class="btn btn-sm btn-outline-warning p-1 py-0 m-0" onclick="editItem(${item.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger p-1 py-0 m-0" onclick="hapusItem(${item.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
 
-                list.forEach(item => {
-                    subTotalDivisi += item.totalAkhir;
-                    grandTotal += item.totalAkhir;
-                    
-                    // Cek divisi: Jika Farmasi, ubah teks Harga Satuan jadi "-" di cetakan
-                    let tampilHargaSatuan = (divisi === "INSTALASI FARMASI") ? "-" : formatUang(item.harga);
-                    
-                    html += `
-                        <tr>
-                            <td width="40%" class="ps-4">${item.nama}</td>
-                            <td width="10%" class="text-end">${item.qty}</td>
-                            <td width="15%">${item.satuan}</td>
-                            <td width="15%" class="text-end">${tampilHargaSatuan}</td>
-                            <td width="5%">Rp</td>
-                            <td width="15%" class="text-end">${formatUang(item.totalAkhir)}</td>
-                            <td width="10%" class="text-end no-print">
-                                <button class="btn btn-sm btn-outline-warning p-1 py-0 m-0" onclick="editItem(${item.id})"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-sm btn-outline-danger p-1 py-0 m-0" onclick="hapusItem(${item.id})"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                });
-
-                if(divisi === "INSTALASI FARMASI") {
-                    html += `
-                        <tr>
-                            <td colspan="4" class="text-end" style="font-weight: 600;">TOTAL OBAT</td>
-                            <td style="font-weight: 600;">Rp</td>
-                            <td class="text-end" style="font-weight: 600;">${formatUang(subTotalDivisi)}</td>
-                            <td class="no-print"></td>
-                        </tr>
-                    `;
-                }
-
-                html += `</tbody></table>`;
-                container.innerHTML += html;
+            if(divisi === "INSTALASI FARMASI") {
+                html += `
+                    <tr>
+                        <td colspan="4" class="text-end" style="font-weight: 600;">TOTAL OBAT</td>
+                        <td style="font-weight: 600;">Rp</td>
+                        <td class="text-end" style="font-weight: 600;">${formatUang(subTotalDivisi)}</td>
+                        <td class="no-print"></td>
+                    </tr>
+                `;
             }
 
-            document.getElementById('view-grandtotal').innerText = formatUang(grandTotal);
+            html += `</tbody></table>`;
+            container.innerHTML += html;
         }
-    </script>
 
-    </body>
-    </html>
+        document.getElementById('view-grandtotal').innerText = formatUang(grandTotal);
+    }
+</script>
+
+</body>
+</html>
